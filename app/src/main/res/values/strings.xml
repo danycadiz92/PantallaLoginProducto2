@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">PantallaLogin</string>
+    <string name="titulo">NATIVEX</string>
+    <string name="no_tienes_cuenta">¿No tienes cuenta? Regístrate</string>
+    <string name="olvidaste_contrasena">¿Olvidaste tu contraseña?</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="iniciar_sesion">Iniciar Sesión</string>
+</resources>
