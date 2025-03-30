@@ -35,7 +35,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val TABLE_RULETA = "ruleta"
         private const val COLUMN_RULETA_ID = "id_ruleta"
         private const val COLUMN_NUMERO_GANADOR = "numero_ganador"
-        private const val COLUMN_NUMEROS_APOSTADOS = "numeros_apostados"
+        private const val COLUMN_VALOR_SEGMENTO = "valor_segmento"
+        private const val COLUMN_TIPO_SEGMENTO = "tipo_segmento"
+        private const val COLUMN_USUARIO_ID = "usuario_id"
+        private const val COLUMN_FECHA = "fecha"
 
         // Tabla Administrador
         private const val TABLE_ADMIN = "administrador"
@@ -73,12 +76,16 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         """.trimIndent()
 
         val createRuletaTable = """
-            CREATE TABLE $TABLE_RULETA (
+             CREATE TABLE $TABLE_RULETA (
                 $COLUMN_RULETA_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_NUMERO_GANADOR INTEGER NOT NULL,
-                $COLUMN_NUMEROS_APOSTADOS INTEGER NOT NULL
-            )
-        """.trimIndent()
+                $COLUMN_VALOR_SEGMENTO INTEGER NOT NULL,
+                $COLUMN_TIPO_SEGMENTO TEXT NOT NULL CHECK($COLUMN_TIPO_SEGMENTO IN ('positivo', 'negativo')),
+                $COLUMN_USUARIO_ID INTEGER NOT NULL,
+                $COLUMN_FECHA TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY($COLUMN_USUARIO_ID) REFERENCES usuarios(id)
+             )
+          """.trimIndent()
 
         val createAdminTable = """
             CREATE TABLE $TABLE_ADMIN (
