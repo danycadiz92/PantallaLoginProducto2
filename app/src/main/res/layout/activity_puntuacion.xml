@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center_horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_ruleta"
+    tools:context=".PuntuacionActivity">
+
+    <!-- Título de la pantalla -->
+    <TextView
+        android:id="@+id/tvTituloPuntos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tus Puntos"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Texto para mostrar monedas actuales -->
+    <TextView
+        android:id="@+id/tvMonedasActuales"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Monedas: 0"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Lista para mostrar detalle de partidas o tiradas -->
+    <ListView
+        android:id="@+id/listPuntuaciones"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+</LinearLayout>

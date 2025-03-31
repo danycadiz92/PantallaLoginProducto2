@@ -26,6 +26,10 @@
         <!-- Pantalla de recuperar contraseña -->
         <activity android:name=".RecuperarActivity" />
 
-    </application>
+        <!-- NUEVAS PANTALLAS que agregaste -->
+        <activity android:name=".BienvenidaActivity" />
+        <activity android:name=".OpcionesActivity" />
+        <activity android:name=".PuntuacionActivity" />
 
+    </application>
 </manifest>
