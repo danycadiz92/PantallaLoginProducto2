@@ -1,0 +1,18 @@
+# Directorios de compilación
+/build/
+/out/
+
+# Configuración de Android Studio
+/.idea/
+/*.iml
+
+# Archivos generados
+/local.properties
+/.gradle/
+/captures/
+/.gradle/
+/navigation/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
