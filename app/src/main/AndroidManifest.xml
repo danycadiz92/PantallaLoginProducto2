@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.pantallalogin">
 
@@ -26,10 +25,17 @@
         <!-- Pantalla de recuperar contraseña -->
         <activity android:name=".RecuperarActivity" />
 
-        <!-- NUEVAS PANTALLAS que agregaste -->
+        <!-- Pantalla de bienvenida -->
         <activity android:name=".BienvenidaActivity" />
+
+        <!-- Pantalla de opciones -->
         <activity android:name=".OpcionesActivity" />
+
+        <!-- Pantalla de puntuación -->
         <activity android:name=".PuntuacionActivity" />
+
+        <!-- Pantalla de la ruleta (¡añádela aquí!) -->
+        <activity android:name=".RuletaActivity" />
 
     </application>
 </manifest>
