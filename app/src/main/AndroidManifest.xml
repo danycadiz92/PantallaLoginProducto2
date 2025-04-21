@@ -9,7 +9,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PantallaLogin">
 
-        <!-- Pantalla principal -->
+        <!-- Actividades -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -18,24 +18,18 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- Pantalla de registro -->
         <activity android:name=".RegistroActivity" />
-
-        <!-- Pantalla de recuperar contraseña -->
         <activity android:name=".RecuperarActivity" />
-
-        <!-- Pantalla de bienvenida -->
         <activity android:name=".BienvenidaActivity" />
-
-        <!-- Pantalla de opciones -->
         <activity android:name=".OpcionesActivity" />
-
-        <!-- Pantalla de puntuación -->
         <activity android:name=".PuntuacionActivity" />
-
-        <!-- Pantalla de la ruleta (¡añádela aquí!) -->
         <activity android:name=".RuletaActivity" />
+        <activity android:name=".HistorialActivity" />
+
+        <!-- Servicio de música de fondo -->
+        <service
+            android:name=".service.MusicService"
+            android:exported="false" />
 
     </application>
 </manifest>

@@ -1,66 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/bg_ruleta"
-    android:fillViewport="true">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="Menú Principal"
+        app:titleTextColor="@android:color/white" />
+
+    <!--  Switch para activar/desactivar música de fondo -->
+    <Switch
+        android:id="@+id/switchMusica"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="24dp">
+        android:text="Música de fondo"
+        android:checked="true"
+        android:layout_margin="16dp" />
 
-        <TextView
-            android:id="@+id/tvTituloOpciones"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Menú Principal"
-            android:textStyle="bold"
-            android:textSize="28sp"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="32dp"/>
+    <!-- ScrollView existente -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_ruleta"
+        android:fillViewport="true">
 
-        <!-- Botón para ir a la Ruleta -->
-        <Button
-            android:id="@+id/btnJugarRuleta"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Jugar Ruleta"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/purple_700"/>
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="24dp">
 
-        <!-- Botón para ir al historial -->
-        <Button
-            android:id="@+id/btnHistorial"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Ver Historial"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/purple_700"/>
+            <!-- Título oculto (ya lo maneja el Toolbar) -->
+            <TextView
+                android:id="@+id/tvTituloOpciones"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Menú Principal"
+                android:textStyle="bold"
+                android:textSize="28sp"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="32dp"/>
 
-        <!-- Botón para ir a configuración o puntajes -->
-        <Button
-            android:id="@+id/btnConfig"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Configuración"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/purple_700"/>
+            <!-- Botones -->
+            <Button
+                android:id="@+id/btnJugarRuleta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jugar Ruleta"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/purple_700"/>
 
-        <!-- Botón para salir / cerrar sesión -->
-        <Button
-            android:id="@+id/btnSalir"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Salir"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="16dp"
-            android:backgroundTint="@color/purple_700"/>
-    </LinearLayout>
-</ScrollView>
+            <Button
+                android:id="@+id/btnHistorial"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver Historial"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/purple_700"/>
+
+            <Button
+                android:id="@+id/btnConfig"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Configuración"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/purple_700"/>
+
+            <Button
+                android:id="@+id/btnSalir"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Salir"
+                android:textColor="@android:color/white"
+                android:layout_marginBottom="16dp"
+                android:backgroundTint="@color/purple_700"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

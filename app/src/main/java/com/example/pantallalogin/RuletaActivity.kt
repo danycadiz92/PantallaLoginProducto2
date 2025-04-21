@@ -4,6 +4,10 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.database.HistorialDBHelper              // ① Importa el helper
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class RuletaActivity : AppCompatActivity() {
 
@@ -14,6 +18,9 @@ class RuletaActivity : AppCompatActivity() {
     private var monedas = 100   // Cantidad inicial
     private lateinit var engine: GameEngine
 
+    // ② Añade la propiedad del helper
+    private lateinit var dbHelper: HistorialDBHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ruleta)
@@ -21,32 +28,44 @@ class RuletaActivity : AppCompatActivity() {
         // Instancio mi lógica de juego
         engine = GameEngine()
 
+        // Instancio el helper de SQLite
+        dbHelper = HistorialDBHelper(this)
+
         // Enlazo vistas
-        tvMonedas = findViewById(R.id.tvMonedas)
+        tvMonedas   = findViewById(R.id.tvMonedas)
         tvResultado = findViewById(R.id.tvResultado)
-        btnGirar = findViewById(R.id.btnGirar)
+        btnGirar    = findViewById(R.id.btnGirar)
 
         // Muestro las monedas iniciales
         actualizarMonedas()
 
         // Al pulsar "Girar"
         btnGirar.setOnClickListener {
-            val numero = engine.girarRuleta()
-            val ganancia = engine.calcularGanancia(numero)
-            monedas += ganancia
+            val numero      = engine.girarRuleta()
+            val ganancia    = engine.calcularGanancia(numero)
+            monedas       += ganancia
 
             // Actualizo UI
             actualizarMonedas()
 
             // Muestro un mensaje con el resultado
-            if (ganancia >= 0) {
-                tvResultado.text = "¡Número $numero! Ganaste $ganancia monedas"
+            tvResultado.text = if (ganancia >= 0) {
+                "¡Número $numero! Ganaste $ganancia monedas"
             } else {
-                tvResultado.text = "¡Número $numero! Perdiste ${-ganancia} monedas"
+                "¡Número $numero! Perdiste ${-ganancia} monedas"
             }
 
-            // Si quieres, aquí llamas a tu base de datos:
-            // DataBaseHelper(this).insertarPartida(numero, ganancia, monedas, ... )
+            // ③ Preparo la fecha en formato texto
+            val fecha = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                .format(Date())
+
+            // ④ Inserto el registro de esta partida en SQLite
+            dbHelper.insertarPartida(
+                numero,
+                ganancia,
+                monedas,
+                fecha
+            )
         }
     }
 
