@@ -12,7 +12,7 @@
         android:id="@+id/tvMonedas"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Monedas: 100"
+        android:text="@string/monedas"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF" />
@@ -21,7 +21,7 @@
         android:id="@+id/btnGirar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Girar Ruleta"
+        android:text="@string/boton_girar"
         android:layout_marginTop="24dp"
         android:backgroundTint="@color/purple_500"
         android:textColor="#FFFFFF" />

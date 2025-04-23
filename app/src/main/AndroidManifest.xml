@@ -1,6 +1,21 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.pantallalogin">
 
+    <!-- Permisos -->
+    <!-- Notificaciones (Android 13+) -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <!-- Calendario -->
+    <uses-permission android:name="android.permission.READ_CALENDAR"/>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR"/>
+    <!-- Almacenamiento (solo si targetSdk ≤ 28) -->
+    <!--
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28"/>
+    -->
+    <!-- Ubicación fina (GPS) -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -25,6 +40,10 @@
         <activity android:name=".PuntuacionActivity" />
         <activity android:name=".RuletaActivity" />
         <activity android:name=".HistorialActivity" />
+        <activity
+            android:name=".ui.ayuda.AyudaActivity"
+            android:label="@string/ayuda_titulo"
+            android:exported="true" />
 
         <!-- Servicio de música de fondo -->
         <service

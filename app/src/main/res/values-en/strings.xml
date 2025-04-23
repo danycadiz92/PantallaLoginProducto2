@@ -1,0 +1,63 @@
+<resources>
+    <!-- App -->
+    <string name="app_name">LoginScreen</string>
+
+    <!-- Login -->
+    <string name="titulo">NATIVEX</string>
+    <string name="no_tienes_cuenta">Don't have an account? Sign up</string>
+    <string name="olvidaste_contrasena">Forgot your password?</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="iniciar_sesion">Log In</string>
+
+    <!-- Bienvenida -->
+    <string name="bienvenida_titulo">Welcome!</string>
+    <string name="bienvenida_mensaje">Welcome to Nativex!</string>
+    <string name="boton_empezar">Start</string>
+
+    <!-- Opciones -->
+    <string name="menu_principal">Main Menu</string>
+    <string name="musica_fondo">Background Music</string>
+    <string name="jugar_ruleta">Play Roulette</string>
+    <string name="ver_historial">View History</string>
+    <string name="configuracion">Settings</string>
+    <string name="salir">Log Out</string>
+
+    <!-- Ruleta -->
+    <string name="titulo_ruleta">Roulette</string>
+    <string name="boton_girar">Spin Wheel</string>
+    <string name="monedas">Coins: %1$d</string>
+    <string name="resultado_ganar">You won %1$d coins!</string>
+    <string name="resultado_perder">You lost %1$d coins!</string>
+
+    <!-- Notificación -->
+    <string name="victoria_notif_titulo">Victory!</string>
+    <string name="victoria_notif_texto">You won %1$d coins</string>
+
+    <!-- Historial -->
+    <string name="historial_titulo">Game History</string>
+    <string name="item_fecha">%1$s</string>
+    <string name="item_numero">Number: %1$d</string>
+    <string name="item_resultado">Result: %1$s</string>
+    <string name="item_saldo">Balance: %1$d</string>
+
+    <!-- Puntuación / Configuración -->
+    <string name="titulo_puntuacion">Scores</string>
+
+    <!-- Registro y Recuperar -->
+    <string name="registro_titulo">Register</string>
+    <string name="recuperar_titulo">Recover Password</string>
+
+    <!-- Recuperar específico -->
+    <string name="recuperar_introduce_correo">Enter your email</string>
+    <string name="hint_email">Email</string>
+    <string name="boton_enviar_correo">Send</string>
+
+    <!-- Registro específico -->
+    <string name="hint_nombre_completo">Full name</string>    <!-- corregida la clave -->
+    <string name="hint_contrasena">Password</string>
+    <string name="boton_aceptar">OK</string>
+
+    <!-- Ayuda -->
+    <string name="ayuda_titulo">Help</string>
+</resources>

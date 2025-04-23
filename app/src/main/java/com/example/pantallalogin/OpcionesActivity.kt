@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.tuproyecto.R
 import com.example.tuproyecto.service.MusicService  // ← IMPORT DEL SERVICE
+import com.example.tuproyecto.ui.ayuda.AyudaActivity // ← IMPORT DE AYUDA
 import com.example.tuproyecto.ui.historial.HistorialActivity
 import com.example.tuproyecto.ui.juego.RuletaActivity
 import com.example.tuproyecto.ui.login.LoginActivity
@@ -27,16 +28,12 @@ class OpcionesActivity : AppCompatActivity() {
 
         // --- MUSIC: Control ON/OFF ---
         val switchMusica = findViewById<Switch>(R.id.switchMusica)
-        // Arranca el servicio si el switch viene marcado
         if (switchMusica.isChecked) {
             startService(Intent(this, MusicService::class.java))
         }
-        // Listener para activar/desactivar música
         switchMusica.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) {
-                startService(Intent(this, MusicService::class.java))
-            } else {
-                stopService(Intent(this, MusicService::class.java))
+            Intent(this, MusicService::class.java).also { svc ->
+                if (isChecked) startService(svc) else stopService(svc)
             }
         }
         // --- FIN MUSIC ---
@@ -68,27 +65,31 @@ class OpcionesActivity : AppCompatActivity() {
         return true
     }
 
-    // ④ Manejo los clicks del menú
+    // ④ Manejo los clicks del menú, incluyendo Ayuda
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             R.id.menu_ruleta -> {
                 startActivity(Intent(this, RuletaActivity::class.java))
-                return true
+                true
             }
             R.id.menu_historial -> {
                 startActivity(Intent(this, HistorialActivity::class.java))
-                return true
+                true
             }
             R.id.menu_puntuacion -> {
                 startActivity(Intent(this, PuntuacionActivity::class.java))
-                return true
+                true
+            }
+            R.id.menu_ayuda -> {
+                startActivity(Intent(this, AyudaActivity::class.java))
+                true
             }
             R.id.menu_salir -> {
                 startActivity(Intent(this, LoginActivity::class.java))
                 finish()
-                return true
+                true
             }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 }

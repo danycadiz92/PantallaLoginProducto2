@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <item
         android:id="@+id/menu_ruleta"
-        android:title="Ruleta" />
+        android:title="@string/titulo_ruleta" />
+
     <item
         android:id="@+id/menu_historial"
-        android:title="Historial" />
+        android:title="@string/historial_titulo" />
+
     <item
         android:id="@+id/menu_puntuacion"
-        android:title="Puntuación" />
+        android:title="@string/titulo_puntuacion" />
+
+    <item
+        android:id="@+id/menu_ayuda"
+        android:title="@string/ayuda_titulo" />
+
     <item
         android:id="@+id/menu_salir"
-        android:title="Salir" />
+        android:title="@string/salir" />
+
 </menu>
