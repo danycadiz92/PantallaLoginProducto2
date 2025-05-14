@@ -2,6 +2,11 @@
     <!-- App -->
     <string name="app_name">LoginScreen</string>
 
+    <string name="sign_in_google">Sign in with Google</string>
+    <string name="common_prize_label">Common prize pool: %1$d points</string>
+    <string name="jackpot_msg">Jackpot! You won %1$d points from the pool</string>
+
+
     <!-- Login -->
     <string name="titulo">NATIVEX</string>
     <string name="no_tienes_cuenta">Don't have an account? Sign up</string>

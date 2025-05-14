@@ -1,0 +1,5 @@
+val retrofit = Retrofit.Builder()
+    .baseUrl("https://TU_PROJECT_ID.firebaseio.com/")
+    .addConverterFactory(GsonConverterFactory.create())
+    .build()
+val api = retrofit.create(FirebaseApi::class.java)

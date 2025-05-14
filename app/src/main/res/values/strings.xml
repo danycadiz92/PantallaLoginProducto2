@@ -2,6 +2,11 @@
     <!-- App -->
     <string name="app_name">PantallaLogin</string>
 
+    <string name="sign_in_google">Inicia sesión con Google</string>
+    <string name="common_prize_label">Premio común acumulado: %1$d puntos</string>
+    <string name="jackpot_msg">¡Jackpot! Ganaste %1$d puntos del premio común</string>
+
+
     <!-- Login -->
     <string name="titulo">NATIVEX</string>
     <string name="no_tienes_cuenta">¿No tienes cuenta? Regístrate</string>

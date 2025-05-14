@@ -8,7 +8,6 @@ import android.app.NotificationManager
 import android.content.ContentUris
 import android.content.ContentValues
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Canvas
@@ -30,6 +29,8 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.pantallalogin.database.HistorialDBHelper
 import com.example.pantallalogin.engine.GameEngine
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -43,6 +44,7 @@ class RuletaActivity : AppCompatActivity() {
     private lateinit var ivRuleta: ImageView
     private lateinit var tvMonedas: TextView
     private lateinit var tvResultado: TextView
+    private lateinit var txtPremio: TextView
     private lateinit var btnGirar: Button
 
     private var monedas = 100
@@ -50,17 +52,30 @@ class RuletaActivity : AppCompatActivity() {
     private lateinit var dbHelper: HistorialDBHelper
     private var spinSound: MediaPlayer? = null
     private lateinit var fusedClient: FusedLocationProviderClient
+    private lateinit var prizeRef: DatabaseReference
 
     companion object {
         private const val CHANNEL_ID      = "canal_victoria"
         private const val NOTIFICATION_ID = 1001
-        private const val CALENDAR_REQ    = 2001
         private const val LOC_REQ         = 3001
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_ruleta)
+
+        // Referencia al bote común
+        prizeRef = FirebaseDatabase.getInstance().getReference("commonPrize")
+
+        // Mostrar premio común en vivo
+        txtPremio = findViewById(R.id.txtPremio)
+        prizeRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val valor = snapshot.getValue(Int::class.java) ?: 0
+                txtPremio.text = getString(R.string.common_prize_label, valor)
+            }
+            override fun onCancelled(error: DatabaseError) {}
+        })
 
         // Canal de notificación
         crearCanalNotificacion()
@@ -70,7 +85,7 @@ class RuletaActivity : AppCompatActivity() {
         dbHelper    = HistorialDBHelper(this)
         fusedClient = LocationServices.getFusedLocationProviderClient(this)
 
-        // Pedir permiso de ubicación si es necesario
+        // Permiso ubicación
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
             != PackageManager.PERMISSION_GRANTED) {
@@ -88,12 +103,11 @@ class RuletaActivity : AppCompatActivity() {
 
         // Sonido
         spinSound = MediaPlayer.create(this, R.raw.spin_sound).apply { isLooping = false }
-
         actualizarMonedas()
 
         btnGirar.setOnClickListener {
             val numero   = engine.girarRuleta()
-            val ganancia = engine.calcularGanancia(numero)
+            var ganancia = engine.calcularGanancia(numero)
             monedas    += ganancia
 
             spinSound?.start()
@@ -110,42 +124,83 @@ class RuletaActivity : AppCompatActivity() {
                     override fun onAnimationRepeat(a: Animator) {}
                     override fun onAnimationCancel(a: Animator) {}
                     override fun onAnimationEnd(a: Animator) {
+                        // Actualizar UI y notificación
                         actualizarMonedas()
                         tvResultado.text = if (ganancia >= 0)
                             getString(R.string.resultado_ganar, ganancia)
                         else
                             getString(R.string.resultado_perder, -ganancia)
-
-                        if (ganancia > 0) {
-                            mostrarNotificacionVictoria(ganancia)
-                        }
+                        if (ganancia > 0) mostrarNotificacionVictoria(ganancia)
 
                         val fecha = SimpleDateFormat(
-                            "yyyy-MM-dd HH:mm:ss",
-                            Locale.getDefault()
+                            "yyyy-MM-dd HH:mm:ss", Locale.getDefault()
                         ).format(Date())
 
-                        // Obtenemos ubicación (si permiso dado)
+                        // Guardar en BD local con ubicación
                         if (ActivityCompat.checkSelfPermission(
                                 this@RuletaActivity,
                                 Manifest.permission.ACCESS_FINE_LOCATION
                             ) == PackageManager.PERMISSION_GRANTED) {
-                            fusedClient.lastLocation.addOnSuccessListener { loc: Location? ->
+                            fusedClient.lastLocation.addOnSuccessListener { loc ->
                                 guardarPartidaConUbicacion(
                                     numero, ganancia, monedas, fecha,
                                     loc?.latitude, loc?.longitude
                                 )
                             }
                         } else {
-                            // Sin ubicación
                             guardarPartidaConUbicacion(numero, ganancia, monedas, fecha, null, null)
                         }
 
-                        // Captura y galería
+                        // Subir a Firebase y actualizar bote común
+                        FirebaseAuth.getInstance().currentUser?.let { user ->
+                            // Subir score
+                            val entry = ScoreEntry(user.displayName ?: "Anon", ganancia)
+                            FirebaseDatabase.getInstance()
+                                .getReference("scores")
+                                .push()
+                                .setValue(entry)
+                                .addOnFailureListener { e ->
+                                    Toast.makeText(
+                                        this@RuletaActivity,
+                                        "Error guardando en Firebase: ${e.message}",
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                            // Incrementar bote común en 10
+                            prizeRef.runTransaction(object : Transaction.Handler {
+                                override fun doTransaction(current: MutableData): Transaction.Result {
+                                    val updated = (current.getValue(Int::class.java) ?: 0) + 10
+                                    current.value = updated
+                                    return Transaction.success(current)
+                                }
+                                override fun onComplete(
+                                    error: DatabaseError?, committed: Boolean, snapshot: DataSnapshot?
+                                ) { /* opcional */ }
+                            })
+                            // Si sale 0, repartir bote como jackpot
+                            if (numero == 0) {
+                                prizeRef.get().addOnSuccessListener { snap ->
+                                    val premio = snap.getValue(Int::class.java) ?: 0
+                                    ganancia += premio
+                                    monedas    += premio
+                                    Toast.makeText(
+                                        this@RuletaActivity,
+                                        getString(R.string.jackpot_msg, premio),
+                                        Toast.LENGTH_LONG
+                                    ).show()
+                                    prizeRef.setValue(0)
+                                    // Actualizar UI tras jackpot
+                                    actualizarMonedas()
+                                    tvResultado.text = getString(
+                                        R.string.resultado_ganar, ganancia)
+                                }
+                            }
+                        }
+
+                        // Captura y evento calendario si hay ganancia
                         if (ganancia > 0) {
                             val shot = capturarVista(window.decorView.rootView)
                             guardarCapturaEnGaleria(shot)
-                            // Evento en calendario
                             guardarEventoEnCalendario(ganancia)
                         }
                     }
@@ -159,21 +214,16 @@ class RuletaActivity : AppCompatActivity() {
         numero: Int, ganancia: Int, saldo: Int, fecha: String,
         lat: Double?, lon: Double?
     ) {
-        dbHelper.insertarPartidaRuletaRx(
-            numero, ganancia, saldo, fecha, lat, lon
-        )
+        dbHelper.insertarPartidaRuletaRx(numero, ganancia, saldo, fecha, lat, lon)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { /* OK */ },
-                { err ->
-                    Toast.makeText(
-                        this@RuletaActivity,
-                        "Error guardando partida: ${err.message}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
-            )
+            .subscribe({ /* OK */ }, { err ->
+                Toast.makeText(
+                    this@RuletaActivity,
+                    "Error guardando partida: ${err.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            })
     }
 
     private fun actualizarMonedas() {
@@ -182,12 +232,10 @@ class RuletaActivity : AppCompatActivity() {
 
     private fun crearCanalNotificacion() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name       = getString(R.string.victoria_notif_titulo)
-            val description= "Alertas cuando ganas en la ruleta"
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                this.description = description
-            }
+            val name = getString(R.string.victoria_notif_titulo)
+            val channel = NotificationChannel(
+                CHANNEL_ID, name, NotificationManager.IMPORTANCE_DEFAULT
+            ).apply { description = "Alertas cuando ganas en la ruleta" }
             (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
                 .createNotificationChannel(channel)
         }
@@ -200,14 +248,12 @@ class RuletaActivity : AppCompatActivity() {
             .setContentText(getString(R.string.victoria_notif_texto, ganancia))
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
-        NotificationManagerCompat.from(this)
-            .notify(NOTIFICATION_ID, builder.build())
+        NotificationManagerCompat.from(this).notify(NOTIFICATION_ID, builder.build())
     }
 
     private fun capturarVista(view: View): Bitmap {
         val bmp = Bitmap.createBitmap(view.width, view.height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bmp)
-        view.draw(canvas)
+        Canvas(bmp).also { view.draw(it) }
         return bmp
     }
 
@@ -219,16 +265,12 @@ class RuletaActivity : AppCompatActivity() {
             put(MediaStore.Images.Media.MIME_TYPE, "image/png")
             put(MediaStore.Images.Media.IS_PENDING, 1)
         }
-        val uri = resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, vals)
-        if (uri != null) {
+        resolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, vals)?.let { uri ->
             resolver.openOutputStream(uri)?.use { out -> bitmap.compress(Bitmap.CompressFormat.PNG, 100, out) }
-            vals.clear()
-            vals.put(MediaStore.Images.Media.IS_PENDING, 0)
+            vals.clear(); vals.put(MediaStore.Images.Media.IS_PENDING, 0)
             resolver.update(uri, vals, null, null)
             Toast.makeText(this, "Captura guardada en galería", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Error al guardar captura", Toast.LENGTH_SHORT).show()
-        }
+        } ?: Toast.makeText(this, "Error al guardar captura", Toast.LENGTH_SHORT).show()
     }
 
     private fun guardarEventoEnCalendario(ganancia: Int) {
@@ -247,13 +289,10 @@ class RuletaActivity : AppCompatActivity() {
             put(CalendarContract.Events.EVENT_TIMEZONE,
                 java.util.TimeZone.getDefault().id)
         }
-        val uriEvento = contentResolver.insert(CalendarContract.Events.CONTENT_URI, vals)
-        if (uriEvento != null) {
-            val eventId = ContentUris.parseId(uriEvento)
+        contentResolver.insert(CalendarContract.Events.CONTENT_URI, vals)?.let { uri ->
+            val eventId = ContentUris.parseId(uri)
             Toast.makeText(this, "Evento guardado (ID $eventId)", Toast.LENGTH_SHORT).show()
-        } else {
-            Toast.makeText(this, "Error al guardar evento", Toast.LENGTH_SHORT).show()
-        }
+        } ?: Toast.makeText(this, "Error al guardar evento", Toast.LENGTH_SHORT).show()
     }
 
     private fun obtenerCalendarId(): Long? {
@@ -268,15 +307,10 @@ class RuletaActivity : AppCompatActivity() {
         return null
     }
 
-    // Gestionar respuesta permiso ubicación (solo confirmamos)
-    override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<out String>, results: IntArray
-    ) {
+    override fun onRequestPermissionsResult(requestCode: Int,
+                                            permissions: Array<out String>,
+                                            results: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, results)
-        if (requestCode == LOC_REQ &&
-            results.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
-            // permiso concedido, nada más que hacer
-        }
     }
 
     override fun onDestroy() {
