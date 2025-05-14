@@ -2,4 +2,13 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
+
+    // build.gradle (Project)
+    buildscript {
+        dependencies {
+            // ... otras dependencias de Gradle ...
+            classpath 'com.google.gms:google-services:4.3.15'  // Plugin Google Services
+        }
+    }
+
 }

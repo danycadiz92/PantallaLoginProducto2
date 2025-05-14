@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "233921239890",
+    "project_id": "pantallaloginjuego",
+    "storage_bucket": "pantallaloginjuego.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:233921239890:android:35c3505469a237ab12f88b",
+        "android_client_info": {
+          "package_name": "com.example.pantallalogin"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_l3lf12IGufkHg5bgrGoppM5Rz6i2K4M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

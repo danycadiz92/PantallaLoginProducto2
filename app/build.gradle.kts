@@ -36,6 +36,17 @@ android {
 }
 
 dependencies {
+
+    dependencies {
+        implementation platform('com.google.firebase:firebase-bom:32.2.0')    // BoM de Firebase (ejemplo de versión)
+        implementation 'com.google.firebase:firebase-auth'                   // Firebase Authentication
+        implementation 'com.google.firebase:firebase-database'               // Firebase Realtime Database
+        implementation 'com.google.android.gms:play-services-auth:20.6.0'    // Google Sign-In (Play services)
+        implementation 'com.squareup.retrofit2:retrofit:2.9.0'               // Retrofit HTTP client
+        implementation 'com.squareup.retrofit2:converter-gson:2.9.0'         // Converter GSON para Retrofit
+        // ... otras dependencias existentes ...
+    }
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
@@ -47,4 +58,12 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    plugins {
+        id 'com.android.application'
+        // ... otros plugins ...
+        id 'com.google.gms.google-services'  // Aplicar plugin de Google Services
+    }
+
+
 }

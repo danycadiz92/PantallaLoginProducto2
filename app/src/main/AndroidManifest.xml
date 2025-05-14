@@ -2,6 +2,8 @@
     package="com.example.pantallalogin">
 
     <!-- Permisos -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <!-- Notificaciones (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
     <!-- Calendario -->

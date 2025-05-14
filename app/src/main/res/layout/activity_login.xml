@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/ruleta2"
-    tools:context=".MainActivity">
+    tools:context=".ui.login.LoginActivity">
 
-    <!-- Título -->
+    <!-- ──────────── TÍTULO ──────────── -->
     <TextView
         android:id="@+id/tvTitulo"
         android:layout_width="wrap_content"
@@ -20,9 +20,9 @@
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="40dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Texto: ¿No tienes cuenta? -->
+    <!-- ───────────── LINKS (registro / recuperar) ───────────── -->
     <TextView
         android:id="@+id/tvRegistro"
         android:layout_width="wrap_content"
@@ -34,9 +34,8 @@
         app:layout_constraintTop_toBottomOf="@id/tvTitulo"
         android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- Texto: ¿Olvidaste tu contraseña? -->
     <TextView
         android:id="@+id/tvOlvidaste"
         android:layout_width="wrap_content"
@@ -44,13 +43,12 @@
         android:text="@string/olvidaste_contrasena"
         android:textColor="#FFFF00"
         android:textSize="14sp"
-        android:textStyle="normal"
         app:layout_constraintTop_toBottomOf="@id/tvRegistro"
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
 
-    <!-- Campo Usuario -->
+    <!-- ──────────── CAMPOS USUARIO / CONTRASEÑA ──────────── -->
     <EditText
         android:id="@+id/etUsername"
         android:layout_width="0dp"
@@ -64,9 +62,8 @@
         android:layout_marginHorizontal="32dp"
         app:layout_constraintTop_toBottomOf="@id/tvOlvidaste"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Campo Contraseña -->
     <EditText
         android:id="@+id/etPassword"
         android:layout_width="0dp"
@@ -80,9 +77,19 @@
         android:layout_marginHorizontal="32dp"
         app:layout_constraintTop_toBottomOf="@id/etUsername"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Botón Iniciar Sesión -->
+    <!-- ──────────── BOTÓN GOOGLE SIGN-IN ──────────── -->
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/btnGoogleSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@id/etPassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- ──────────── BOTÓN INICIAR SESIÓN CLÁSICO (Opcional) ──────────── -->
     <Button
         android:id="@+id/btnIniciar"
         android:layout_width="wrap_content"
@@ -90,9 +97,9 @@
         android:text="@string/iniciar_sesion"
         android:textColor="#FFFF00"
         android:backgroundTint="#000000"
-        android:layout_marginTop="24dp"
-        app:layout_constraintTop_toBottomOf="@id/etPassword"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/btnGoogleSignIn"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
